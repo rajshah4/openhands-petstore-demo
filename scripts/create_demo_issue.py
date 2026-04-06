@@ -106,7 +106,11 @@ def get_repo() -> str:
 def create_issue(kind: str, scenario: str, add_label: bool, dry_run: bool) -> int:
     repo = get_repo()
     config = SCENARIOS[kind][scenario]
-    body = config["body"] + f"\n\n_Requested at {datetime.now(timezone.utc).isoformat()} by create_demo_issue.py._\n"
+    body = (
+        config["body"]
+        + f"\n\n_Requested at {datetime.now(timezone.utc).isoformat()} by create_demo_issue.py._\n"
+        + "_This issue was created by an AI assistant (OpenHands) on behalf of Raj Shah._\n"
+    )
 
     print(f"Repository: {repo}")
     print(f"Kind: {kind}")

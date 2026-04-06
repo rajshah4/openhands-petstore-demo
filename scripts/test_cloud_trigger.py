@@ -47,6 +47,8 @@ This disposable issue verifies that the `{label}` label triggers the GitHub Acti
 Expected outcome:
 - A workflow acknowledgement comment appears on the issue.
 - The comment includes an OpenHands conversation URL.
+
+_This issue was created by an AI assistant (OpenHands) on behalf of Raj Shah._
 """
 
     result = run([
@@ -75,7 +77,7 @@ def close_issue(repo: str, number: int) -> None:
     result = run([
         "gh", "issue", "close", str(number),
         "--repo", repo,
-        "--comment", "Closing disposable OpenHands trigger smoke test issue.",
+        "--comment", "Closing disposable OpenHands trigger smoke test issue. This closing comment was created by an AI assistant (OpenHands) on behalf of Raj Shah.",
     ])
     if result.returncode != 0:
         raise RuntimeError(result.stderr.strip() or "failed to close issue")
