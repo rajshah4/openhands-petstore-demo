@@ -27,6 +27,19 @@ GitHub event or workflow_dispatch
   -> OpenHands comments, branches, and opens PRs
 ```
 
+## Live validation status
+
+This repository has been validated live against GitHub Actions and OpenHands Cloud in the public demo repo:
+
+- PR code review flow
+- `oh:fix-bug` issue routing
+- `oh:add-ci-check` issue routing
+- manual dependency management workflow
+- manual release notes workflow
+- manual test expansion workflow
+
+The live tests produced real draft PRs, GitHub comments, and OpenHands conversation links.
+
 ## Added OpenHands workflows
 
 | Workflow | Trigger | Purpose |
@@ -65,6 +78,10 @@ For the full experience, the repository should be connected to OpenHands Cloud s
 ### 3. Create labels
 
 Create `oh:fix-bug` and `oh:add-ci-check` in the GitHub repo.
+
+### 4. Enable Dependency Graph
+
+If you want the inherited upstream `Dependency Review` pull-request check to pass, enable **Dependency Graph** in the repository security settings.
 
 ## Demo issue templates and helper scripts
 
@@ -127,27 +144,9 @@ scripts/
 `-- test_cloud_trigger.py
 ```
 
-## Suggested demo story
+## Presenter guide
 
-A clean end-to-end flow for a live demo:
-
-1. Show the existing Petstore app and current workflows
-2. Create a bug issue with `oh:fix-bug`
-3. Show the acknowledgement comment and conversation link
-4. Let OpenHands fix the bug and open a draft PR
-5. Open a second issue with `oh:add-ci-check`
-6. Show OpenHands adding a new smoke-test workflow
-7. Run the manual `OpenHands Expand Test Coverage` workflow
-8. Run the manual `OpenHands Release Notes` workflow
-9. Open or update a PR to show `OpenHands PR Code Review`
-
-## Good built-in demo targets from the current code
-
-These are already visible in the Petstore controllers and make useful issue prompts:
-
-- `PetController.findPetsByStatus(...)` sends a false error notifier even on successful responses
-- `UserController.deleteUser(...)` returns a null entity on successful deletion
-- `OrderController.deleteOrder(...)` returns a null entity on successful deletion
+If you want a presenter-facing walkthrough, sample issue prompts, and a suggested story arc for a live demo, see [`DEMO_GUIDE.md`](./DEMO_GUIDE.md).
 
 ## Local validation
 
