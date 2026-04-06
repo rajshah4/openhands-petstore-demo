@@ -1,0 +1,212 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+import os
+import sys
+from pathlib import Path
+from typing import Any
+
+SCRIPT_DIR = Path(__file__).resolve().parent
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
+
+from cloud_client import GitHubClient, OpenHandsCloudClient
+
+REPO_ROOT = SCRIPT_DIR.parent.parent
+SKILLS_DIR = REPO_ROOT / ".agents" / "skills"
+AGENTS_PATH = REPO_ROOT / "AGENTS.md"
+
+
+def load_json(path: str | None) -> dict[str, Any]:
+    if not path or not Path(path).exists():
+        return {}
+    return json.loads(Path(path).read_text())
+
+
+def load_skill(skill_name: str) -> str:
+    skill_path = SKILLS_DIR / skill_name / "SKILL.md"
+    if not skill_path.exists():
+        raise FileNotFoundError(f"Skill not found: {skill_path}")
+    return skill_path.read_text()
+
+
+def load_agents_memory() -> str | None:
+    if AGENTS_PATH.exists():
+        return AGENTS_PATH.read_text()
+    return None
+
+
+def build_context(event: dict[str, Any]) -> dict[str, Any]:
+    repository = os.getenv("GITHUB_REPOSITORY") or event.get("repository", {}).get("full_name")
+    default_branch = event.get("repository", {}).get("default_branch") or os.getenv("GITHUB_REF_NAME")
+
+    context: dict[str, Any] = {
+        "repository": repository,
+        "default_branch": default_branch,
+        "event_name": os.getenv("GITHUB_EVENT_NAME"),
+        "event_action": os.getenv("GITHUB_EVENT_ACTION") or event.get("action"),
+        "actor": os.getenv("GITHUB_ACTOR"),
+        "workflow": os.getenv("GITHUB_WORKFLOW"),
+        "run_id": os.getenv("GITHUB_RUN_ID"),
+        "run_url": f"https://github.com/{repository}/actions/runs/{os.getenv('GITHUB_RUN_ID')}" if repository and os.getenv("GITHUB_RUN_ID") else None,
+        "inputs": event.get("inputs", {}),
+    }
+
+    issue = event.get("issue")
+    if isinstance(issue, dict):
+        context["issue"] = {
+            "number": issue.get("number"),
+            "title": issue.get("title"),
+            "body": issue.get("body"),
+            "url": issue.get("html_url"),
+            "labels": [label.get("name") for label in issue.get("labels", [])],
+        }
+
+    pr = event.get("pull_request")
+    if isinstance(pr, dict):
+        context["pull_request"] = {
+            "number": pr.get("number"),
+            "title": pr.get("title"),
+            "body": pr.get("body"),
+            "url": pr.get("html_url"),
+            "head_branch": pr.get("head", {}).get("ref"),
+            "base_branch": pr.get("base", {}).get("ref"),
+            "head_sha": pr.get("head", {}).get("sha"),
+            "changed_files": pr.get("changed_files"),
+        }
+
+    label = event.get("label")
+    if isinstance(label, dict):
+        context["label"] = {"name": label.get("name")}
+
+    return context
+
+
+def determine_branch(context: dict[str, Any]) -> str:
+    explicit = os.getenv("SELECTED_BRANCH")
+    if explicit:
+        return explicit
+    pr = context.get("pull_request") or {}
+    if pr.get("head_branch"):
+        return pr["head_branch"]
+    return context.get("default_branch") or os.getenv("GITHUB_HEAD_REF") or os.getenv("GITHUB_REF_NAME") or "master"
+
+
+def determine_comment_number(context: dict[str, Any]) -> int | None:
+    explicit = os.getenv("COMMENT_NUMBER")
+    if explicit:
+        return int(explicit)
+    issue = context.get("issue") or {}
+    if issue.get("number"):
+        return int(issue["number"])
+    pr = context.get("pull_request") or {}
+    if pr.get("number"):
+        return int(pr["number"])
+    return None
+
+
+def build_prompt(skill_name: str, skill_content: str, context: dict[str, Any], memory: str | None) -> str:
+    sections = [f"# OpenHands GitHub Demo Task: {skill_name}\n"]
+
+    if memory:
+        sections.append("## Repository Memory\n")
+        sections.append(memory)
+        sections.append("\n---\n")
+
+    sections.append("## Skill Instructions\n")
+    sections.append(skill_content)
+    sections.append("\n---\n")
+
+    sections.append("## Runtime Context\n")
+    sections.append("Use this JSON context exactly as provided:\n")
+    sections.append(f"```json\n{json.dumps(context, indent=2)}\n```\n")
+    sections.append(
+        "\nWork directly in this repository. Favor minimal, reviewable changes. "
+        "If you create a PR comment, issue comment, or release body, add a short note that it was created by OpenHands on behalf of the repository operator."
+    )
+    return "\n".join(sections)
+
+
+def build_ack_comment(skill_name: str, conversation_url: str, branch: str, context: dict[str, Any]) -> str:
+    target = "issue" if context.get("issue") else "pull request"
+    workflow = context.get("workflow") or "GitHub Actions"
+    return (
+        f"🤖 OpenHands started **{skill_name}** for this {target}.\n\n"
+        f"- Branch: `{branch}`\n"
+        f"- Workflow: `{workflow}`\n"
+        f"- Progress: {conversation_url}\n\n"
+        f"_This comment was generated by OpenHands on behalf of the repository operator._"
+    )
+
+
+def append_step_summary(lines: list[str]) -> None:
+    summary_path = os.getenv("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+    with open(summary_path, "a", encoding="utf-8") as handle:
+        handle.write("\n".join(lines) + "\n")
+
+
+def main() -> int:
+    skill_name = os.environ["SKILL_NAME"]
+    api_key = os.environ["OPENHANDS_API_KEY"]
+    event = load_json(os.getenv("GITHUB_EVENT_PATH"))
+    context = build_context(event)
+    repository = context["repository"]
+    branch = determine_branch(context)
+    comment_number = determine_comment_number(context)
+
+    skill_content = load_skill(skill_name)
+    prompt = build_prompt(skill_name, skill_content, context, load_agents_memory())
+
+    title = os.getenv("CONVERSATION_TITLE")
+    if not title:
+        issue = context.get("issue") or {}
+        pr = context.get("pull_request") or {}
+        suffix = issue.get("title") or pr.get("title") or context.get("workflow") or repository
+        title = f"{skill_name}: {suffix}"[:120]
+
+    client = OpenHandsCloudClient(api_key)
+    result = client.start_conversation(
+        initial_user_msg=prompt,
+        repository=repository,
+        selected_branch=branch,
+        title=title,
+    )
+
+    conversation_url = result["conversation_url"]
+    append_step_summary(
+        [
+            "## OpenHands conversation started",
+            f"- Skill: `{skill_name}`",
+            f"- Repository: `{repository}`",
+            f"- Branch: `{branch}`",
+            f"- Conversation: {conversation_url}",
+        ]
+    )
+
+    if os.getenv("POST_ACK_COMMENT", "true").lower() == "true" and comment_number:
+        github = GitHubClient(os.environ["GITHUB_TOKEN"])
+        github.create_issue_comment(
+            repository,
+            comment_number,
+            build_ack_comment(skill_name, conversation_url, branch, context),
+        )
+
+    print(
+        json.dumps(
+            {
+                "skill": skill_name,
+                "repository": repository,
+                "branch": branch,
+                "conversation_url": conversation_url,
+            },
+            indent=2,
+        )
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

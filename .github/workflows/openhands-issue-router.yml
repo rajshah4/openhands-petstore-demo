@@ -1,0 +1,69 @@
+name: OpenHands Issue Router
+
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  fix-bug:
+    if: github.actor != 'github-actions[bot]' && github.event.label.name == 'oh:fix-bug'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: openhands-fix-bug-${{ github.event.issue.number }}
+      cancel-in-progress: false
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dispatcher dependencies
+        run: pip install httpx
+
+      - name: Start OpenHands bug fix
+        env:
+          OPENHANDS_API_KEY: ${{ secrets.OPENHANDS_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SKILL_NAME: fix-bug
+          COMMENT_NUMBER: ${{ github.event.issue.number }}
+          POST_ACK_COMMENT: 'true'
+          CONVERSATION_TITLE: 'Fix bug from issue #${{ github.event.issue.number }}'
+        run: python .github/openhands/dispatch.py
+
+  create-ci-check:
+    if: github.actor != 'github-actions[bot]' && github.event.label.name == 'oh:add-ci-check'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: openhands-ci-check-${{ github.event.issue.number }}
+      cancel-in-progress: false
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dispatcher dependencies
+        run: pip install httpx
+
+      - name: Start OpenHands CI check creation
+        env:
+          OPENHANDS_API_KEY: ${{ secrets.OPENHANDS_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SKILL_NAME: create-ci-check
+          COMMENT_NUMBER: ${{ github.event.issue.number }}
+          POST_ACK_COMMENT: 'true'
+          CONVERSATION_TITLE: 'Add CI check from issue #${{ github.event.issue.number }}'
+        run: python .github/openhands/dispatch.py

@@ -1,0 +1,42 @@
+name: OpenHands PR Code Review
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: openhands-code-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  code-review:
+    if: github.actor != 'github-actions[bot]' && github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dispatcher dependencies
+        run: pip install httpx
+
+      - name: Start OpenHands code review
+        env:
+          OPENHANDS_API_KEY: ${{ secrets.OPENHANDS_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SKILL_NAME: code-review
+          SELECTED_BRANCH: ${{ github.event.pull_request.head.ref }}
+          COMMENT_NUMBER: ${{ github.event.pull_request.number }}
+          POST_ACK_COMMENT: 'true'
+          CONVERSATION_TITLE: 'PR review #${{ github.event.pull_request.number }}'
+        run: python .github/openhands/dispatch.py

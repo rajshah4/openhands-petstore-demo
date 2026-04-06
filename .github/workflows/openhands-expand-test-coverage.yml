@@ -1,0 +1,53 @@
+name: OpenHands Expand Test Coverage
+
+on:
+  workflow_dispatch:
+    inputs:
+      focus_area:
+        description: Endpoint, class, or package to cover
+        required: false
+        default: io.swagger.petstore.controller
+      test_command:
+        description: Preferred verification command
+        required: false
+        default: mvn --no-transfer-progress -B test
+      branch:
+        description: Branch to analyze
+        required: false
+        default: master
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+concurrency:
+  group: openhands-expand-tests-${{ github.event.inputs.branch || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  expand-test-coverage:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dispatcher dependencies
+        run: pip install httpx
+
+      - name: Start OpenHands coverage expansion run
+        env:
+          OPENHANDS_API_KEY: ${{ secrets.OPENHANDS_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SKILL_NAME: expand-test-coverage
+          SELECTED_BRANCH: ${{ github.event.inputs.branch || github.event.repository.default_branch }}
+          POST_ACK_COMMENT: 'false'
+          CONVERSATION_TITLE: 'Expand test coverage'
+        run: python .github/openhands/dispatch.py
