@@ -146,6 +146,14 @@ scripts/
 `-- test_cloud_trigger.py
 ```
 
+## Repo-local skills as a starting point
+
+This demo uses custom repo-local skills under `.agents/skills/` so the behavior is easy to inspect, fork, and adapt.
+
+If you want to extend this demo, these skills are a good starting point for your own GitHub-native automations. You can also browse the broader OpenHands skills catalog in [`OpenHands/extensions`](https://github.com/OpenHands/extensions/tree/main/skills) and reuse or adapt those skills where they fit.
+
+In this repo, the custom skills are intentionally the main demo surface, while the upstream skills catalog is a useful reference library.
+
 ## Presenter guide
 
 If you want a presenter-facing walkthrough, sample issue prompts, and a suggested story arc for a live demo, see [`DEMO_GUIDE.md`](./DEMO_GUIDE.md).
