@@ -1,6 +1,6 @@
 ---
 name: OpenHands bug-fix demo
-about: Create a labeled issue that asks OpenHands to fix a Petstore bug
+about: Create a labeled issue that asks OpenHands to start a bug-fix run and propose a draft PR
 title: "[bug] "
 labels: ["oh:fix-bug"]
 ---

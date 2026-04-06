@@ -59,3 +59,5 @@
 - Final public-demo state: the repo is public, `OPENHANDS_API_KEY` is configured, Dependency Graph is enabled, and the smoke-test PR achieved all-green checks.
 - Cleanup pass closed duplicate PR #4 and the docs-only smoke-test PR #6, leaving representative demo PRs #5, #7, #8, #9, and #10 open.
 - Documentation split: `README.md` is for replication/setup/testing, while `DEMO_GUIDE.md` is for presenters running the live story.
+- Doc wording convention: describe `oh:fix-bug` and `oh:add-ci-check` as starting OpenHands runs that create conversations and aim to open draft PRs, not just as simple routing labels.
+

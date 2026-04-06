@@ -9,8 +9,8 @@ It showcases these flows:
 1. PR code review using an OpenHands skill
 2. Dependency management from a manual or scheduled workflow
 3. Release notes generation from a manual workflow
-4. Tagged GitHub issue -> bug fix (`oh:fix-bug`)
-5. Tagged GitHub issue -> new CI check (`oh:add-ci-check`)
+4. Tagged GitHub issue -> OpenHands bug-fix run (`oh:fix-bug`) -> draft PR
+5. Tagged GitHub issue -> OpenHands CI-check run (`oh:add-ci-check`) -> draft PR
 6. Manual test coverage expansion using a dedicated skill
 
 The trigger pattern follows the latest GitHub-native approach from your `demo-spec-driven`, `dailyme`, `openhands-sre`, and related demos:
@@ -34,20 +34,20 @@ GitHub event or workflow_dispatch
 This repository has been validated live against GitHub Actions and OpenHands Cloud in the public demo repo:
 
 - PR code review flow
-- `oh:fix-bug` issue routing
-- `oh:add-ci-check` issue routing
+- `oh:fix-bug` issue routing -> OpenHands conversation -> draft bug-fix PR
+- `oh:add-ci-check` issue routing -> OpenHands conversation -> draft CI-check PR
 - manual dependency management workflow
 - manual release notes workflow
 - manual test expansion workflow
 
-The live tests produced real draft PRs, GitHub comments, and OpenHands conversation links.
+The live tests produced real OpenHands conversation links, GitHub comments, and draft PRs.
 
 ## Added OpenHands workflows
 
 | Workflow | Trigger | Purpose |
 |---|---|---|
 | `OpenHands PR Code Review` | PR opened / updated / ready for review | Review code and leave GitHub feedback |
-| `OpenHands Issue Router` | Issue labeled | Route `oh:fix-bug` and `oh:add-ci-check` issues to the right skill |
+| `OpenHands Issue Router` | Issue labeled | Route `oh:fix-bug` and `oh:add-ci-check` issues into OpenHands conversations that aim to open draft PRs |
 | `OpenHands Dependency Management` | Manual + weekly schedule | Audit and update dependencies safely |
 | `OpenHands Release Notes` | Manual | Draft release notes for a requested tag or ref range |
 | `OpenHands Expand Test Coverage` | Manual | Add focused tests and open a draft PR |
@@ -58,8 +58,8 @@ Create these repository labels before the issue-driven demo:
 
 | Label | Purpose |
 |---|---|
-| `oh:fix-bug` | Trigger OpenHands to fix a bug from an issue |
-| `oh:add-ci-check` | Trigger OpenHands to create a new CI check from an issue |
+| `oh:fix-bug` | Trigger an OpenHands bug-fix run from an issue and aim for a draft PR |
+| `oh:add-ci-check` | Trigger an OpenHands CI-check run from an issue and aim for a draft PR |
 
 ## Required setup
 

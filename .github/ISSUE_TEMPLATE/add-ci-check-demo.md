@@ -1,6 +1,6 @@
 ---
 name: OpenHands CI-check demo
-about: Create a labeled issue that asks OpenHands to add a new CI check
+about: Create a labeled issue that asks OpenHands to start a CI-check run and propose a draft PR
 title: "[ci] "
 labels: ["oh:add-ci-check"]
 ---

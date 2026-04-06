@@ -10,8 +10,8 @@ Yes — this demo has been validated live in GitHub and OpenHands Cloud.
 
 Validated flows:
 - PR code review
-- tagged issue -> bug fix (`oh:fix-bug`)
-- tagged issue -> new CI check (`oh:add-ci-check`)
+- tagged issue -> OpenHands bug-fix run (`oh:fix-bug`) -> draft PR
+- tagged issue -> OpenHands CI-check run (`oh:add-ci-check`) -> draft PR
 - manual dependency management
 - manual release notes
 - manual test expansion
@@ -35,9 +35,9 @@ A clean end-to-end presenter flow:
 1. Show the public repository and the OpenHands workflows
 2. Open a labeled bug issue with `oh:fix-bug`
 3. Show the acknowledgement comment and OpenHands conversation link
-4. Show the resulting draft PR for the bug fix
+4. Show the resulting draft bug-fix PR
 5. Open a second labeled issue with `oh:add-ci-check`
-6. Show the resulting CI workflow PR
+6. Show the resulting draft CI-check PR
 7. Trigger `OpenHands Expand Test Coverage`
 8. Trigger `OpenHands Release Notes`
 9. Open or update a pull request to show `OpenHands PR Code Review`
