@@ -55,5 +55,5 @@
 - Manual workflows for dependency management, release notes, and test expansion were all validated live and each opened draft PRs.
 - Re-running the bug-fix smoke test created duplicate draft bug-fix PRs because each labeled issue continued running after the disposable issue was closed.
 - After switching the repo to public, the inherited `Code scanning - action` check recovered successfully on rerun.
-- `Dependency Review` still reports the repo as unsupported, which likely means Dependency Graph is not enabled yet in repository settings and may require a manual GitHub-side setting change.
+- After enabling Dependency Graph in repository settings, `Dependency Review` also recovered and all PR checks passed on the smoke-test PR.
 
