@@ -62,7 +62,6 @@ public class PetController {
             return new ResponseContext().status(Response.Status.NOT_FOUND).entity("Pets not found");
         }
 
-        notifier.notify(new RuntimeException("Pets not found"));
         return new ResponseContext()
                 .contentType(Util.getMediaType(request))
                 .entity(petByStatus);

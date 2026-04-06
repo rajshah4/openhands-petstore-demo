@@ -88,7 +88,7 @@ public class OrderController {
         if (null == order) {
             return new ResponseContext()
                     .contentType(Util.getMediaType(request))
-                    .entity(order);
+                    .entity("Order deleted");
         } else {
             return new ResponseContext().status(Response.Status.NOT_MODIFIED).entity("Order couldn't be deleted.");
         }
