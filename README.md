@@ -2,6 +2,8 @@
 
 This repository turns the upstream Swagger Petstore sample into a GitHub-native OpenHands Cloud demo.
 
+It is meant to show OpenHands acting as a useful coding agent for developers: taking in work from issues, pull requests, and manual workflows, making meaningful code or repository changes, and returning the results as reviewable pull requests.
+
 It showcases these flows:
 
 1. PR code review using an OpenHands skill
