@@ -125,15 +125,14 @@ class OpenHandsCloudClient:
                     raise RuntimeError("OpenHands start task returned no app_conversation_id")
 
                 conversation = self.get_conversation(conversation_id) or {}
+                app_conversation_url = f"{self.base_url}/conversations/{conversation_id}"
                 return {
                     "start_task": start_task,
                     "ready_task": ready_task,
                     "conversation": conversation,
                     "conversation_id": conversation_id,
-                    "conversation_url": conversation.get(
-                        "conversation_url",
-                        f"{self.base_url}/conversations/{conversation_id}",
-                    ),
+                    "conversation_url": app_conversation_url,
+                    "runtime_conversation_url": conversation.get("conversation_url"),
                 }
             except Exception as exc:  # noqa: BLE001
                 last_error = exc

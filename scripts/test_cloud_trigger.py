@@ -86,7 +86,7 @@ def close_issue(repo: str, number: int) -> None:
 def classify_comment(comment: dict) -> tuple[str, str] | None:
     body = str(comment.get("body") or "")
     lowered = body.lower()
-    if "openhands started" in lowered and "app.all-hands.dev" in lowered:
+    if "openhands started" in lowered and "progress:" in lowered:
         return ("ok", body)
     if "failed to initialize" in lowered or "did not start" in lowered:
         return ("failed", body)
