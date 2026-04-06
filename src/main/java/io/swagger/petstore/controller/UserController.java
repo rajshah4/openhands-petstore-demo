@@ -130,7 +130,7 @@ public class UserController {
         if (null == user) {
             return new ResponseContext()
                     .contentType(Util.getMediaType(request))
-                    .entity(user);
+                    .entity("User deleted");
         } else {
             return new ResponseContext().status(Response.Status.NOT_MODIFIED).entity("User couldn't be deleted.");
         }

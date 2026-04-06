@@ -241,6 +241,13 @@
             <artifactId>bugsnag</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
     <properties>
         <maven-plugin-version>1.0.0</maven-plugin-version>
