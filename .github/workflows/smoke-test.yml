@@ -1,0 +1,87 @@
+name: API Smoke Test
+
+on:
+  push:
+    branches: ["master"]
+  pull_request:
+    branches: ["master"]
+
+permissions:
+  contents: read
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Java 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: "11"
+          distribution: temurin
+
+      - name: Cache local Maven repository
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build WAR
+        run: mvn --no-transfer-progress -B package -DskipTests --file pom.xml
+
+      - name: Start Jetty server
+        run: |
+          java -jar target/dependency/jetty-runner.jar \
+            --port 8080 \
+            target/swagger-petstore-*.war \
+            &>/tmp/jetty.log &
+          echo "Waiting for Jetty to be ready..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8080/api/v3/openapi.json -o /dev/null; then
+              echo "Jetty is ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+
+      - name: Smoke-test /api/v3/openapi.json
+        run: |
+          HTTP_STATUS=$(curl -s -o /tmp/openapi.json -w "%{http_code}" \
+            http://localhost:8080/api/v3/openapi.json)
+          echo "HTTP status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "ERROR: expected 200, got $HTTP_STATUS"
+            cat /tmp/jetty.log
+            exit 1
+          fi
+          # Verify the response looks like an OpenAPI document
+          if ! grep -q '"openapi"' /tmp/openapi.json; then
+            echo "ERROR: response does not contain an openapi field"
+            cat /tmp/openapi.json
+            exit 1
+          fi
+          echo "Smoke test passed."
+
+      - name: Probe /api/v3/pet/findByStatus
+        run: |
+          HTTP_STATUS=$(curl -s -o /tmp/pets.json -w "%{http_code}" \
+            "http://localhost:8080/api/v3/pet/findByStatus?status=available")
+          echo "HTTP status: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "ERROR: /api/v3/pet/findByStatus returned $HTTP_STATUS"
+            cat /tmp/pets.json
+            cat /tmp/jetty.log
+            exit 1
+          fi
+          echo "Pet findByStatus probe passed."
+
+      - name: Upload Jetty log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jetty-log
+          path: /tmp/jetty.log
