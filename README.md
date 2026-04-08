@@ -17,7 +17,7 @@ The trigger pattern follows the latest GitHub-native approach from your `demo-sp
 
 - GitHub Actions starts a small Python dispatcher
 - the dispatcher creates an OpenHands Cloud conversation
-- repo-local skills in `.agents/skills/` tell OpenHands what to do
+- repo-local skills in `.agents/skills/` tell OpenHands what to do, with `code-review` and `releasenotes` vendored from `OpenHands/extensions`
 
 ## Demo architecture
 
@@ -127,7 +127,7 @@ For presenter-facing guidance on which artifacts are currently safe to show live
 `-- skills/
     |-- code-review/
     |-- dependency-management/
-    |-- release-notes/
+    |-- releasenotes/
     |-- fix-bug/
     |-- create-ci-check/
     `-- expand-test-coverage/
@@ -149,13 +149,21 @@ scripts/
 `-- test_cloud_trigger.py
 ```
 
-## Repo-local skills as a starting point
+## Official and repo-local skills
 
-This demo uses custom repo-local skills under `.agents/skills/` so the behavior is easy to inspect, fork, and adapt.
+This demo keeps all skills in `.agents/skills/` so the behavior is easy to inspect, fork, and adapt.
 
-If you want to extend this demo, these skills are a good starting point for your own GitHub-native automations. You can also browse the broader OpenHands skills catalog in [`OpenHands/extensions`](https://github.com/OpenHands/extensions/tree/main/skills) and reuse or adapt those skills where they fit.
+It now uses a mixed model:
+- official OpenHands skills, vendored locally for inspectability:
+  - `code-review`
+  - `releasenotes`
+- custom repo-local demo skills:
+  - `fix-bug`
+  - `create-ci-check`
+  - `dependency-management`
+  - `expand-test-coverage`
 
-In this repo, the custom skills are intentionally the main demo surface, while the upstream skills catalog is a useful reference library.
+If you want to extend this demo, browse the broader OpenHands skills catalog in [`OpenHands/extensions`](https://github.com/OpenHands/extensions/tree/main/skills) and reuse or adapt those skills where they fit.
 
 ## Presenter guide
 

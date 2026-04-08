@@ -45,7 +45,7 @@ jobs:
         env:
           OPENHANDS_API_KEY: ${{ secrets.OPENHANDS_API_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SKILL_NAME: release-notes
+          SKILL_NAME: releasenotes
           SELECTED_BRANCH: ${{ github.event.inputs.compare_to || github.event.repository.default_branch }}
           POST_ACK_COMMENT: 'false'
           CONVERSATION_TITLE: 'Release notes ${{ github.event.inputs.release_tag }}'

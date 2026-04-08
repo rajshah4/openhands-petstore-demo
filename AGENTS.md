@@ -8,7 +8,7 @@
 ## OpenHands demo architecture
 - GitHub Actions trigger a lightweight Python dispatcher in `.github/openhands/dispatch.py`.
 - The dispatcher starts OpenHands Cloud conversations using the V1 `app-conversations` API.
-- Repo-local skills live under `.agents/skills/`.
+- Skills live under `.agents/skills/`; `code-review` and `releasenotes` are vendored from `OpenHands/extensions`, while the other demo flows remain custom repo-local skills.
 - Issue labels route coding tasks:
   - `oh:fix-bug`
   - `oh:add-ci-check`
@@ -60,7 +60,7 @@
 - Cleanup pass closed duplicate PR #4 and the docs-only smoke-test PR #6, leaving representative demo PRs #5, #7, #8, #9, and #10 open.
 - Documentation split: `README.md` is for replication/setup/testing, while `DEMO_GUIDE.md` is for presenters running the live story.
 - Doc wording convention: describe `oh:fix-bug` and `oh:add-ci-check` as starting OpenHands runs that create conversations and aim to open draft PRs, not just as simple routing labels.
-- README should note that repo-local skills are the primary demo surface, while `OpenHands/extensions` skills are a useful starting-point catalog for further customization.
+- README should explain the mixed skill model: official `OpenHands/extensions` skills are vendored locally for `code-review` and `releasenotes`, while the other flows remain custom repo-local skills.
 - `DEMO_GUIDE.md` should include copy-paste sample GitHub issue drafts so presenters can trigger `oh:fix-bug` and `oh:add-ci-check` without improvising prompts.
 - Presenter guidance must distinguish a safer artifact-based demo path from optional fresh live runs; fresh `oh:fix-bug` / `oh:add-ci-check` runs can create valid draft PRs but are not guaranteed to end with green checks.
 - As of 2026-04-08 validation: PR #9 and #10 are the safest hero artifacts, PR #7 and #8 are also good validated examples, PR #6 is the PR-review history example, PR #5 is a cautionary CI-check artifact because its generated smoke test currently fails, and PR #12 is a cautionary fresh bug-fix artifact because its build fails.
