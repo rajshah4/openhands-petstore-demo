@@ -240,6 +240,12 @@
             <version>[3.0,4.0)</version>
             <artifactId>bugsnag</artifactId>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
     <properties>
