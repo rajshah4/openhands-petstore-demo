@@ -167,7 +167,7 @@ If you want to extend this demo, browse the broader OpenHands skills catalog in 
 
 ## Presenter guide
 
-If you want a presenter-facing walkthrough, sample issue prompts, and a suggested story arc for a live demo, see [`DEMO_GUIDE.md`](./DEMO_GUIDE.md).
+If you want a presenter-facing walkthrough, sample issue prompts, a suggested story arc for a live demo, and a concise explanation of the official-vs-custom skill mix used in the presentation, see [`DEMO_GUIDE.md`](./DEMO_GUIDE.md).
 
 ## Local validation
 

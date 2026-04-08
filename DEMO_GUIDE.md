@@ -28,12 +28,27 @@ Before a live demo, confirm these repo settings:
   - `oh:add-ci-check`
 - Dependency Graph is enabled so inherited `Dependency Review` checks stay green
 
+## Skill mix used in this demo
+
+This demo intentionally uses a mix of official OpenHands skills and custom repo-local skills.
+
+- Official OpenHands skills, vendored locally under `.agents/skills/`:
+  - `code-review`
+  - `releasenotes`
+- Custom repo-local demo skills:
+  - `fix-bug`
+  - `create-ci-check`
+  - `dependency-management`
+  - `expand-test-coverage`
+
+That lets the demo show both reusable OpenHands platform capabilities and repo-specific GitHub-native automations.
+
 ## What is currently safe to show
 
 Validated artifacts as of the latest review:
 - `#9` — best bug-fix artifact to show; build check passes
 - `#10` — strongest green PR artifact; build, CodeQL, and dependency review pass
-- `#7` — release-notes artifact; rerun checks passed
+- `#14` — freshest release-notes artifact using the official `releasenotes` skill; checks passed
 - `#8` — dependency-management artifact; rerun checks passed
 - `#6` — closed historical PR-review smoke test; useful for explaining the review flow
 
@@ -53,7 +68,7 @@ This is the path to use if you want a dependable walkthrough with already-valida
 1. Show the public repository and the OpenHands workflows
 2. Open representative bug-fix PR `#9` to show labeled issue -> OpenHands conversation -> draft PR
 3. Open representative test-expansion PR `#10` to show a larger coding change with green checks
-4. Open representative release-notes PR `#7`
+4. Open representative release-notes PR `#14` to show the official `releasenotes` skill producing a fresh reviewable artifact
 5. Open representative dependency-management PR `#8`
 6. Open closed PR `#6` if you want to show the PR code-review flow history
 7. Mention that draft PRs intentionally skip `OpenHands PR Code Review` until they are marked ready for review
@@ -154,11 +169,14 @@ Add a lightweight CI workflow that proves the Petstore app can start and serve i
 
 Current representative demo PRs in the public repo:
 - `#5` — CI smoke-test workflow creation (use as a guardrails example, not the cleanest hero path)
-- `#7` — release notes
 - `#8` — dependency management
 - `#9` — bug fix
 - `#10` — test expansion
 - `#12` — fresh bug-fix rerun that shows CI catching a bad draft proposal
+- `#14` — fresh release-notes artifact produced after switching to the official `releasenotes` skill
+
+Historical artifact still useful for storytelling:
+- `#7` — earlier release-notes artifact from the pre-refactor validation pass
 
 These artifacts are useful to keep around because they show different OpenHands-generated outcomes from the live test runs: both successful proposals and proposals that still need human review and CI feedback.
 
