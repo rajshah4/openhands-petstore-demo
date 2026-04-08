@@ -64,6 +64,9 @@
 - `DEMO_GUIDE.md` should include copy-paste sample GitHub issue drafts so presenters can trigger `oh:fix-bug` and `oh:add-ci-check` without improvising prompts.
 - Presenter guidance must distinguish a safer artifact-based demo path from optional fresh live runs; fresh `oh:fix-bug` / `oh:add-ci-check` runs can create valid draft PRs but are not guaranteed to end with green checks.
 - As of 2026-04-08 validation: PR #9 and #10 are the safest hero artifacts, PR #7 and #8 are also good validated examples, PR #6 is the PR-review history example, PR #5 is a cautionary CI-check artifact because its generated smoke test currently fails, and PR #12 is a cautionary fresh bug-fix artifact because its build fails.
+- As of 2026-04-08, `code-review` is vendored verbatim from `OpenHands/extensions`, and `releasenotes` is vendored from `OpenHands/extensions` with a thin repo-specific note to prefer reviewable PR artifacts in this demo.
+- Live validation after that refactor: the `OpenHands Release Notes` workflow ran successfully with `SKILL_NAME: releasenotes` and opened draft PR #14 (`docs: release notes for skill-validation-v0.1.1`) with green checks; a temporary PR #13 verified that the official `code-review` skill produced a sensible review summary, and that validation PR was then closed and deleted.
+
 
 
 
