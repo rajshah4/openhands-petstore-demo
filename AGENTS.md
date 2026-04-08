@@ -61,5 +61,7 @@
 - Documentation split: `README.md` is for replication/setup/testing, while `DEMO_GUIDE.md` is for presenters running the live story.
 - Doc wording convention: describe `oh:fix-bug` and `oh:add-ci-check` as starting OpenHands runs that create conversations and aim to open draft PRs, not just as simple routing labels.
 - README should note that repo-local skills are the primary demo surface, while `OpenHands/extensions` skills are a useful starting-point catalog for further customization.
+- `DEMO_GUIDE.md` should include copy-paste sample GitHub issue drafts so presenters can trigger `oh:fix-bug` and `oh:add-ci-check` without improvising prompts.
+
 
 

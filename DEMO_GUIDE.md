@@ -51,6 +51,79 @@ These are visible in the Petstore controllers and work well as issue prompts:
 - `UserController.deleteUser(...)` returns a null entity on successful deletion
 - `OrderController.deleteOrder(...)` returns a null entity on successful deletion
 
+## Sample draft issues to create
+
+You are creating the GitHub issues during the demo. The simplest path is to use the built-in issue templates, but you can also copy-paste drafts like these.
+
+### Sample bug issue (`oh:fix-bug`)
+
+**Title**
+```text
+[bug] False-positive error notifier in PetController.findPetsByStatus
+```
+
+**Label**
+```text
+oh:fix-bug
+```
+
+**Body**
+```md
+## Problem
+`PetController.findPetsByStatus(...)` appears to trigger an error notifier even when the request succeeds and pets are returned.
+
+## Where it shows up
+- File or endpoint: `src/main/java/io/swagger/petstore/controller/PetController.java`
+- Current behavior: a successful status lookup can still fire a `Pets not found` error notification
+- Expected behavior: successful lookups should return the pets without sending an error notification
+
+## Reproduction steps
+1. Inspect `PetController.findPetsByStatus(...)`
+2. Call the endpoint with a valid status such as `available`
+3. Confirm the success path should not notify an error
+
+## Acceptance criteria
+- [ ] Minimal code fix
+- [ ] Regression test or clear explanation if testing is blocked
+- [ ] Draft PR linked back to this issue
+
+## Notes for OpenHands
+Please keep the fix focused and add a regression test if practical.
+```
+
+### Sample CI issue (`oh:add-ci-check`)
+
+**Title**
+```text
+[ci] Add a lightweight API smoke-test workflow
+```
+
+**Label**
+```text
+oh:add-ci-check
+```
+
+**Body**
+```md
+## Goal
+Add a lightweight CI workflow that proves the Petstore app can start and serve its OpenAPI document.
+
+## Why this check matters
+- It should catch runtime failures that a compile-only build misses
+- It should run on pull requests
+- It should stay fast and targeted
+
+## Suggested implementation
+- Workflow name: `API Smoke Test`
+- Commands to run: build the app, start Jetty, wait for readiness, and curl `/api/v3/openapi.json`
+- Expected pass criteria: the endpoint returns HTTP 200 and contains an `openapi` field
+
+## Acceptance criteria
+- [ ] New workflow or targeted CI update
+- [ ] No overlap with existing Maven, CodeQL, or dependency-review jobs
+- [ ] Draft PR linked back to this issue
+```
+
 ## Representative live artifacts
 
 Current representative demo PRs in the public repo:
