@@ -117,6 +117,9 @@ python3 scripts/test_cloud_trigger.py --label oh:fix-bug
 
 This creates a disposable issue, waits for the GitHub Action acknowledgement comment with an OpenHands conversation URL, then closes the issue.
 
+For presenter-facing guidance on which artifacts are currently safe to show live versus which ones are better treated as optional or cautionary examples, see [`DEMO_GUIDE.md`](./DEMO_GUIDE.md).
+
+
 ## Repository layout for the demo
 
 ```text

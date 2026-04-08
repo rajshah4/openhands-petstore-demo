@@ -28,20 +28,44 @@ Before a live demo, confirm these repo settings:
   - `oh:add-ci-check`
 - Dependency Graph is enabled so inherited `Dependency Review` checks stay green
 
+## What is currently safe to show
+
+Validated artifacts as of the latest review:
+- `#9` — best bug-fix artifact to show; build check passes
+- `#10` — strongest green PR artifact; build, CodeQL, and dependency review pass
+- `#7` — release-notes artifact; rerun checks passed
+- `#8` — dependency-management artifact; rerun checks passed
+- `#6` — closed historical PR-review smoke test; useful for explaining the review flow
+
+Artifacts to treat as optional or cautionary:
+- `#5` — good example of OpenHands creating a CI-check PR, but the generated `API Smoke Test` currently fails and is better framed as a guardrails example than a clean hero demo
+- `#12` — newer bug-fix draft PR created from a fresh issue; it currently fails `Build Test PR`, so do not use it as the primary success-path example
+
+
 ## Suggested demo story
 
-A clean end-to-end presenter flow:
+Use one of these two paths depending on how much live risk you want.
+
+### Safer presenter path (recommended)
+
+This is the path to use if you want a dependable walkthrough with already-validated artifacts.
 
 1. Show the public repository and the OpenHands workflows
-2. Open a labeled bug issue with `oh:fix-bug`
-3. Show the acknowledgement comment and OpenHands conversation link
-4. Show the resulting draft bug-fix PR
-5. Open a second labeled issue with `oh:add-ci-check`
-6. Show the resulting draft CI-check PR
-7. Trigger `OpenHands Expand Test Coverage`
-8. Trigger `OpenHands Release Notes`
-9. Open or update a pull request to show `OpenHands PR Code Review`
-10. Optionally show the dependency-management workflow opening its own PR
+2. Open representative bug-fix PR `#9` to show labeled issue -> OpenHands conversation -> draft PR
+3. Open representative test-expansion PR `#10` to show a larger coding change with green checks
+4. Open representative release-notes PR `#7`
+5. Open representative dependency-management PR `#8`
+6. Open closed PR `#6` if you want to show the PR code-review flow history
+7. Mention that draft PRs intentionally skip `OpenHands PR Code Review` until they are marked ready for review
+
+### Optional live-run path
+
+Use this only if you are comfortable with draft PRs being non-deterministic and not always ending with green checks.
+
+1. Create a labeled issue with `oh:fix-bug` or `oh:add-ci-check`
+2. Show the acknowledgement comment and OpenHands conversation link
+3. Show the resulting draft PR
+4. Explain that the draft PR still has to pass normal CI and review gates like any human-authored change
 
 ## Good built-in demo targets
 
@@ -54,6 +78,8 @@ These are visible in the Petstore controllers and work well as issue prompts:
 ## Sample draft issues to create
 
 You are creating the GitHub issues during the demo. The simplest path is to use the built-in issue templates, but you can also copy-paste drafts like these.
+
+Important: these issue drafts are good for showing issue routing, acknowledgement comments, conversation creation, and draft PR generation. They are not guaranteed to produce a fully green PR on every fresh run, so use the safer presenter path above if you need a predictable demo.
 
 ### Sample bug issue (`oh:fix-bug`)
 
@@ -127,13 +153,14 @@ Add a lightweight CI workflow that proves the Petstore app can start and serve i
 ## Representative live artifacts
 
 Current representative demo PRs in the public repo:
-- `#5` — CI smoke-test workflow
+- `#5` — CI smoke-test workflow creation (use as a guardrails example, not the cleanest hero path)
 - `#7` — release notes
 - `#8` — dependency management
 - `#9` — bug fix
 - `#10` — test expansion
+- `#12` — fresh bug-fix rerun that shows CI catching a bad draft proposal
 
-These artifacts are useful to keep around because they show the different OpenHands-generated outcomes from the live test runs.
+These artifacts are useful to keep around because they show different OpenHands-generated outcomes from the live test runs: both successful proposals and proposals that still need human review and CI feedback.
 
 ## Optional cleanup after a demo
 
