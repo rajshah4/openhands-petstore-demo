@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3.10
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
       - name: Set up Java 11
@@ -46,7 +46,7 @@ jobs:
           set -e
       - name: Build generator image and push
         if: env.RELEASE_OK == 'yes'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
@@ -55,7 +55,7 @@ jobs:
           tags: swaggerapi/petstore3:${{ env.TAG }}
       - name: Build generator image and push
         if: env.RELEASE_OK == 'yes'
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           file: Dockerfile-telemetry
           context: .
