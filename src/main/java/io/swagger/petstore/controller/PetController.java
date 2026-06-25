@@ -230,6 +230,26 @@ public class PetController {
         return updatePet(request, pet);
     }
 
+    public ResponseContext findPetsByMaxFee(final RequestContext request, final Long maxFee) {
+        if (maxFee == null) {
+            notifier.notify(new RuntimeException("No maxFee provided"));
+            return new ResponseContext()
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("No maxFee provided. Try again?");
+        }
+        if (maxFee < 0) {
+            notifier.notify(new RuntimeException("Invalid maxFee value"));
+            return new ResponseContext()
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("maxFee must be a non-negative value in cents.");
+        }
+
+        final List<Pet> result = petData.findPetsByMaxFee(maxFee);
+        return new ResponseContext()
+                .contentType(Util.getMediaType(request))
+                .entity(result);
+    }
+
     public ResponseContext findPetsByTags(final RequestContext request, final List<String> tags) {
         if (tags == null || tags.size() == 0) {
             notifier.notify(new RuntimeException("No tags provided"));

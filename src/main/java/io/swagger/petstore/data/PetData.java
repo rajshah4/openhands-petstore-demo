@@ -34,29 +34,30 @@ public class PetData {
         categories.add(createCategory(3, "Rabbits"));
         categories.add(createCategory(4, "Lions"));
 
+        // adoptionFeeCents: fee in cents (e.g. 5000 = $50.00)
         pets.add(createPet(1, categories.get(1), "Cat 1", new String[]{
-                "url1", "url2"}, new String[]{"tag1", "tag2"}, "available"));
+                "url1", "url2"}, new String[]{"tag1", "tag2"}, "available", 5000L));
         pets.add(createPet(2, categories.get(1), "Cat 2", new String[]{
-                "url1", "url2"}, new String[]{"tag2", "tag3"}, "available"));
+                "url1", "url2"}, new String[]{"tag2", "tag3"}, "available", 7500L));
         pets.add(createPet(3, categories.get(1), "Cat 3", new String[]{
-                "url1", "url2"}, new String[]{"tag3", "tag4"}, "pending"));
+                "url1", "url2"}, new String[]{"tag3", "tag4"}, "pending", 10000L));
 
         pets.add(createPet(4, categories.get(0), "Dog 1", new String[]{
-                "url1", "url2"}, new String[]{"tag1", "tag2"}, "available"));
+                "url1", "url2"}, new String[]{"tag1", "tag2"}, "available", 15000L));
         pets.add(createPet(5, categories.get(0), "Dog 2", new String[]{
-                "url1", "url2"}, new String[]{"tag2", "tag3"}, "sold"));
+                "url1", "url2"}, new String[]{"tag2", "tag3"}, "sold", 12500L));
         pets.add(createPet(6, categories.get(0), "Dog 3", new String[]{
-                "url1", "url2"}, new String[]{"tag3", "tag4"}, "pending"));
+                "url1", "url2"}, new String[]{"tag3", "tag4"}, "pending", 8000L));
 
         pets.add(createPet(7, categories.get(3), "Lion 1", new String[]{
-                "url1", "url2"}, new String[]{"tag1", "tag2"}, "available"));
+                "url1", "url2"}, new String[]{"tag1", "tag2"}, "available", 50000L));
         pets.add(createPet(8, categories.get(3), "Lion 2", new String[]{
-                "url1", "url2"}, new String[]{"tag2", "tag3"}, "available"));
+                "url1", "url2"}, new String[]{"tag2", "tag3"}, "available", 60000L));
         pets.add(createPet(9, categories.get(3), "Lion 3", new String[]{
-                "url1", "url2"}, new String[]{"tag3", "tag4"}, "available"));
+                "url1", "url2"}, new String[]{"tag3", "tag4"}, "available", 45000L));
 
         pets.add(createPet(10, categories.get(2), "Rabbit 1", new String[]{
-                "url1", "url2"}, new String[]{"tag3", "tag4"}, "available"));
+                "url1", "url2"}, new String[]{"tag3", "tag4"}, "available", 3500L));
     }
 
     public Pet getPetById(final long petId) {
@@ -76,6 +77,16 @@ public class PetData {
                 if (s.equals(pet.getStatus())) {
                     result.add(pet);
                 }
+            }
+        }
+        return result;
+    }
+
+    public List<Pet> findPetsByMaxFee(final long maxFeeCents) {
+        final List<Pet> result = new ArrayList<>();
+        for (final Pet pet : pets) {
+            if (pet.getAdoptionFeeCents() != null && pet.getAdoptionFeeCents() <= maxFeeCents) {
+                result.add(pet);
             }
         }
         return result;
@@ -114,6 +125,12 @@ public class PetData {
 
     public static Pet createPet(final Long id, final Category cat, final String name,
                             final List<String> urls, final List<Tag> tags, final String status) {
+        return createPet(id, cat, name, urls, tags, status, null);
+    }
+
+    public static Pet createPet(final Long id, final Category cat, final String name,
+                            final List<String> urls, final List<Tag> tags, final String status,
+                            final Long adoptionFeeCents) {
         final Pet pet = new Pet();
         pet.setId(id);
         pet.setCategory(cat);
@@ -121,11 +138,17 @@ public class PetData {
         pet.setPhotoUrls(urls);
         pet.setTags(tags);
         pet.setStatus(status);
+        pet.setAdoptionFeeCents(adoptionFeeCents);
         return pet;
     }
 
     private static Pet createPet(final long id, final Category cat, final String name, final String[] urls,
                                  final String[] tags, final String status) {
+        return createPet(id, cat, name, urls, tags, status, null);
+    }
+
+    private static Pet createPet(final long id, final Category cat, final String name, final String[] urls,
+                                 final String[] tags, final String status, final Long adoptionFeeCents) {
         final Pet pet = new Pet();
         pet.setId(id);
         pet.setCategory(cat);
@@ -147,6 +170,7 @@ public class PetData {
         }
         pet.setTags(tagObjs);
         pet.setStatus(status);
+        pet.setAdoptionFeeCents(adoptionFeeCents);
         return pet;
     }
 

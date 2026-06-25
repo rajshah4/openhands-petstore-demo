@@ -159,6 +159,46 @@ paths:
         - petstore_auth:
             - write:pets
             - read:pets
+  /pet/findByMaxFee:
+    get:
+      tags:
+        - pet
+      summary: Finds Pets within a budget.
+      description: >-
+        Returns all pets whose adoption fee is at or below the specified maximum.
+        The `maxFee` parameter is expressed in cents (e.g. pass 7500 for a $75.00 budget).
+        Families can use this endpoint to see only pets they can afford before visiting the shelter.
+      operationId: findPetsByMaxFee
+      parameters:
+        - name: maxFee
+          in: query
+          description: Maximum adoption fee in cents (e.g. 7500 = $75.00)
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 7500
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        '400':
+          description: Invalid maxFee value
+        default:
+          description: Unexpected error
+      security:
+        - petstore_auth:
+            - read:pets
   /pet/findByTags:
     get:
       tags:
@@ -792,6 +832,11 @@ components:
             - available
             - pending
             - sold
+        adoptionFeeCents:
+          type: integer
+          format: int64
+          description: adoption fee in cents (e.g. 7500 = $75.00)
+          example: 7500
       xml:
         name: pet
     ApiResponse:
