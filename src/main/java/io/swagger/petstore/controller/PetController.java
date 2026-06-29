@@ -244,6 +244,28 @@ public class PetController {
                 .contentType(Util.getMediaType(request))
                 .entity(petByTags);
     }
-    
+
+    public ResponseContext findPetsByAdoptionBudget(final RequestContext request, final Integer budget) {
+        if (budget == null) {
+            notifier.notify(new RuntimeException("No budget provided"));
+            return new ResponseContext()
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("No budget provided. Try again?");
+        }
+
+        if (budget < 0) {
+            notifier.notify(new RuntimeException("Invalid budget provided"));
+            return new ResponseContext()
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Budget must be zero or greater. Try again?");
+        }
+
+        final List<Pet> petsInBudget = petData.findPetsByAdoptionBudget(budget);
+
+        return new ResponseContext()
+                .contentType(Util.getMediaType(request))
+                .entity(petsInBudget);
+    }
+
 }
 

@@ -32,6 +32,7 @@ public class Pet {
     private List<String> photoUrls = new ArrayList<>();
     private List<Tag> tags = new ArrayList<>();
     private String status;
+    private Integer adoptionFee;
 
     @XmlElement(name = "id")
     public long getId() {
@@ -88,5 +89,15 @@ public class Pet {
 
     public void setStatus(final String status) {
         this.status = status;
+    }
+
+    @XmlElement(name = "adoptionFee")
+    @Schema(description = "adoption fee for the pet, in whole currency units", example = "75")
+    public Integer getAdoptionFee() {
+        return adoptionFee;
+    }
+
+    public void setAdoptionFee(final Integer adoptionFee) {
+        this.adoptionFee = adoptionFee;
     }
 }

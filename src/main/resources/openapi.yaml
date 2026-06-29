@@ -198,6 +198,45 @@ paths:
         - petstore_auth:
             - write:pets
             - read:pets
+  /pet/findByAdoptionBudget:
+    get:
+      tags:
+        - pet
+      summary: Finds Pets within an adoption budget.
+      description: Returns every pet whose adoption fee is less than or equal to the requested budget, so families can browse the catalog within what they can afford.
+      operationId: findPetsByAdoptionBudget
+      parameters:
+        - name: budget
+          in: query
+          description: Maximum adoption fee (inclusive) the family is willing to pay, in whole currency units.
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 0
+            example: 100
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+            application/xml:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Pet'
+        '400':
+          description: Invalid budget value
+        default:
+          description: Unexpected error
+      security:
+        - petstore_auth:
+            - write:pets
+            - read:pets
   /pet/{petId}:
     get:
       tags:
@@ -792,6 +831,12 @@ components:
             - available
             - pending
             - sold
+        adoptionFee:
+          type: integer
+          format: int32
+          description: Adoption fee for the pet, in whole currency units. Lets families filter the catalog by budget.
+          example: 75
+          minimum: 0
       xml:
         name: pet
     ApiResponse:
